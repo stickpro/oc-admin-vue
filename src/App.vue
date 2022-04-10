@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="col-span-1 sm:col-span-1">
-                  <div class="mt-6 flex rounded-md shadow-sm">
+                  <div class="mt-6 flex rounded-md">
                     <button
                       type="button"
                       @click="remove(form.id)"
@@ -86,6 +86,42 @@
                     </button>
                   </div>
                 </div>
+                <div class="col-span-1 sm:col-span-8 text-left ">
+                  <div class="rounded-md ">
+                    <label
+                      :for="`${form.id}__chatmessage`"
+                      class="form-label inline-block mb-2 text-gray-700"
+                      >Шаблон сообщения</label
+                    >
+                    <textarea
+                      v-model="form.message"
+                      class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                      :id="`${form.id}__chatmessage`"
+                      rows="3"
+                      placeholder="Ваш шаблон сообщения при отправке"
+                    ></textarea>
+                    <p class="font-normal leading-normal mt-0 text-gray-800">
+                      '${from}' - Адрес отправителя
+                    </p>
+                    <p class="font-normal leading-normal mt-0 text-gray-800">
+                      '${to}' - Адрес получателя
+                    </p>
+                    <p class="font-normal leading-normal mt-0 text-gray-800">
+                      '${subject}' - Тема письма
+                    </p>
+                    <p class="font-normal leading-normal mt-0 text-gray-800">
+                      '${text}' - Текст письма
+                    </p>
+                  </div>
+                </div>
+
+                  <button
+                    type="button"
+                    @click="update(form)"
+                    class="mt-3 w-full inline-flex justify-center rounded-md border bg-red-500 border-red-500 shadow-sm px-4 py-2 text-base font-medium text-white sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    Обновить
+                  </button>
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -110,7 +146,15 @@ export default {
   },
   data() {
     return {
-      forms: [],
+      forms: [
+        {
+          id: 1,
+          email: "asdasd",
+          password: "asdasd",
+          chat_id: 123123123,
+          message: "asdasdasd",
+        },
+      ],
     };
   },
   methods: {
@@ -129,8 +173,24 @@ export default {
         }
       );
       console.log(response);
-      await this.loadData()
-
+      await this.loadData();
+    },
+    async update(form) {
+      const response = await fetch(
+        `${this.$config.requestConfig.baseUrl}${this.$config.requestConfig.baseRoute}/delete/${form.id}&${this.$config.requestConfig.tokenName}=${this.$config.requestConfig.token}`,
+        {
+          method: "DELETE",
+        }
+      );
+      console.log(response)
+      await fetch(
+        `${this.$config.requestConfig.baseUrl}${this.$config.requestConfig.baseRoute}/add&${this.$config.requestConfig.tokenName}=${this.$config.requestConfig.token}`,
+        {
+          method: "POST",
+          body: JSON.stringify(form),
+        }
+      );
+      await this.loadData();
     },
   },
   mounted() {

@@ -118,6 +118,42 @@
                           />
                         </div>
                       </div>
+                      <div class="w-full">
+                        <label
+                          :for="`${form.id}__chatid`"
+                          class="block text-sm font-medium text-gray-700"
+                          >Шаблон сообщения</label
+                        >
+                        <div class="mt-1 rounded-md shadow-sm">
+                          <textarea
+                            v-model="form.message"
+                            class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            id="exampleFormControlTextarea1"
+                            rows="3"
+                            placeholder="Ваш шаблон сообщения при отправке"
+                          ></textarea>
+                          <p
+                            class="font-normal leading-normal mt-0 text-gray-800"
+                          >
+                            '${from}' - Адрес отправителя
+                          </p>
+                          <p
+                            class="font-normal leading-normal mt-0 text-gray-800"
+                          >
+                            '${to}' - Адрес получателя
+                          </p>
+                          <p
+                            class="font-normal leading-normal mt-0 text-gray-800"
+                          >
+                            '${subject}' - Тема письма
+                          </p>
+                          <p
+                            class="font-normal leading-normal mt-0 text-gray-800"
+                          >
+                            '${text}' - Текст письма
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -172,20 +208,20 @@ export default {
   data() {
     return {
       open: false,
-      form: { id: 1, email: "", password: "", chat_id: "" },
+      form: { id: 1, email: "", password: "", chat_id: "", message: "" },
       res: {},
     };
   },
   methods: {
     async addNew() {
-       const res =  await fetch(
+      const res = await fetch(
         `${this.$config.requestConfig.baseUrl}${this.$config.requestConfig.baseRoute}/add&${this.$config.requestConfig.tokenName}=${this.$config.requestConfig.token}`,
         {
           method: "POST",
           body: JSON.stringify(this.form),
         }
       );
-      this.res = res
+      this.res = res;
       this.open = false;
 
       await this.$emit("load");
